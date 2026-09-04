@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: abdon-lloydjedrick
+    name: ramirez-bonjoshpaolo-lavalust
     runtime: docker
-    repo: https://github.com/jed-996/abdon-lloydjedrick-lavalust
+    repo: https://github.com/ramirez-bonjoshpaolo-hub/ramirez-bonjoshpaolo-lavalust
     branch: main
     plan: free
     region: singapore
