@@ -10,7 +10,10 @@ WORKDIR /var/www/html
 
 COPY . /var/www/html
 
-RUN chmod +x /var/www/html/render-start.sh \
+RUN tar -xzf /var/www/html/aquastock-overlay.tar.gz -C /var/www/html \
+    && rm /var/www/html/aquastock-overlay.tar.gz \
+    && chmod +x /var/www/html/render-start.sh \
+    && mkdir -p /var/www/html/runtime/cache /var/www/html/runtime/logs /var/www/html/runtime/session \
     && chown -R www-data:www-data /var/www/html/runtime \
     && chmod -R 775 /var/www/html/runtime
 
