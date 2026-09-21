@@ -1,24 +1,21 @@
-FROM php:8.3-apache
+ARG PHP_VERSION=8.5
 
-RUN docker-php-ext-install pdo_mysql \
-    && a2enmod rewrite headers \
-    && sed -ri '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf \
-    && printf 'ServerName localhost\n' > /etc/apache2/conf-available/servername.conf \
-    && a2enconf servername
+FROM php:${PHP_VERSION}-apache
 
-WORKDIR /var/www/html
+# Install PDO MySQL
+RUN docker-php-ext-install pdo pdo_mysql
 
-COPY . /var/www/html
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
 
-RUN tar -xzf /var/www/html/aquastock-overlay.tar.gz -C /var/www/html \
-    && rm /var/www/html/aquastock-overlay.tar.gz \
-    && chmod +x /var/www/html/render-start.sh \
-    && mkdir -p /var/www/html/runtime/cache /var/www/html/runtime/logs /var/www/html/runtime/session \
-    && chown -R www-data:www-data /var/www/html/runtime \
-    && chmod -R 775 /var/www/html/runtime
+# Allow .htaccess overrides
+RUN sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 
-ENV PORT=10000
+# Copy app files
+COPY . /var/www/html/
 
-EXPOSE 10000
+# Fix permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-CMD ["/var/www/html/render-start.sh"]
+EXPOSE 80

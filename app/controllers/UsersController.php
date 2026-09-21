@@ -6,16 +6,24 @@ class UsersController extends Controller
     public function __construct()
     {
         parent::__construct();
-
         $this->call->database();
-        $this->UsersModel = $this->call->model('UsersModel');
+        $this->call->model('UsersModel');
     }
 
     public function index()
     {
-        $this->call->view('users', [
-            'page_title' => 'User Management',
-            'users'      => $this->UsersModel->all(),
+        $users = $this->UsersModel->all();
+
+        foreach ($users as &$user) {
+            if (isset($user['email'])) {
+                $user['email'] = preg_replace('/@example\.com$/i', '@gmail.com', $user['email']);
+            }
+        }
+        unset($user);
+
+        $this->call->view('users/index', [
+            'title' => 'Community Directory',
+            'users' => $users,
         ]);
     }
 }

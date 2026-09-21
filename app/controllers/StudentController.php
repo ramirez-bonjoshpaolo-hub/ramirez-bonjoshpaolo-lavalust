@@ -3,32 +3,40 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 class StudentController extends Controller
 {
-    private function studentData(): array
+    public function __construct()
+    {
+        parent::__construct();
+        $this->call->library('session');
+    }
+
+    private function student_data()
     {
         return [
-            'page_title'  => "Lloyd's Student Signal",
-            'student_id'  => 'MCC-2024 00090',
-            'name'        => 'Lloyd Jedrick D. Abdon',
-            'course'      => 'BS Information Technology',
-            'year'        => '3rd Year',
-            'section'     => 'F2',
-            'email'       => 'lloydjedrickabdon@gmail.com',
-            'description' => 'An information technology student exploring web systems, databases, and practical software deployment.',
-            'skills'      => ['PHP', 'Git and GitHub', 'Database Design', 'Web Deployment'],
-            'hobbies'     => ['Building web projects', 'Learning new technologies', 'Problem solving'],
+            'student_id' => getenv('STUDENT_ID') ?: 'MCC2023-1110',
+            'name' => getenv('STUDENT_NAME') ?: 'Bon Josh Paolo D. Ramirez',
+            'course' => getenv('STUDENT_COURSE') ?: 'BS Information Technology',
+            'year_level' => getenv('STUDENT_YEAR_LEVEL') ?: '3rd Year',
+            'section' => getenv('STUDENT_SECTION') ?: '3F2',
+            'email' => getenv('STUDENT_EMAIL') ?: 'ramirezbonjoshpaolo00@gmail.com',
         ];
     }
 
     public function index()
     {
-        $data = $this->studentData();
-        $data['access_notice'] = ($_GET['notice'] ?? '') === 'profile-protected';
+        $this->session->set_userdata('student_access', true);
 
-        $this->call->view('student_home', $data);
+        $this->call->view('student/index', [
+            'student' => $this->student_data(),
+            'title' => 'Ramirez Field Notes',
+            'notice' => $this->session->flashdata('student_access_message'),
+        ]);
     }
 
     public function profile()
     {
-        $this->call->view('student_profile', $this->studentData());
+        $this->call->view('student/profile', [
+            'student' => $this->student_data(),
+            'title' => 'Bon Josh Paolo D. Ramirez | Student Profile',
+        ]);
     }
 }

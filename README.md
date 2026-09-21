@@ -1,3 +1,30 @@
+# Ramirez - Bon Josh Paolo LavaLust Labs
+
+Personalized LavaLust laboratory project for **Bon Josh Paolo Ramirez**. The framework landing page remains unchanged; the student, users, login, and product-management pages use a separate Ramirez visual system.
+
+## Laboratory routes
+
+| Route | Requirement |
+| --- | --- |
+| `/` | Original LavaLust landing page |
+| `/student` | Personalized student information |
+| `/student/profile` | StudentMiddleware-protected profile |
+| `/users` | Database-backed UsersModel table |
+| `/login` | Session authentication |
+| `/products` | Authenticated product CRUD |
+
+## Before running
+
+1. Copy `.env.example` to `.env`.
+2. Add the real student ID, section, and school email to `.env`.
+3. Add Aiven MySQL credentials and a strong `APP_KEY`, `AUTH_USERNAME`, and `AUTH_PASSWORD`.
+4. Run `database/schema.sql` in Aiven.
+5. Deploy the repository as `ramirez-bonjoshpaolo-lavalust` and keep all secrets in Render environment variables.
+
+Do not commit `.env`; it is intentionally ignored.
+
+---
+
 # LavaLust Framework
 
 > A lightweight, fast PHP framework built for developers who want clean MVC architecture without unnecessary complexity or performance overhead.
@@ -282,10 +309,3 @@ LavaLust Framework is open-source software licensed under the **[MIT License](ht
 - **GitHub Repository:** [https://github.com/ronmarasigan/lavalust](https://github.com/ronmarasigan/lavalust)
 - **Documentation:** [https://lavalust.netlify.app](https://lavalust.netlify.app)
 - **Report an Issue:** [https://github.com/ronmarasigan/lavalust/issues](https://github.com/ronmarasigan/lavalust/issues)
-
-## Render deployment
-
-This project includes a Docker-based Render configuration. Create a Render Web
-Service from this repository using the `main` branch and Docker runtime. Apache
-binds to Render's `PORT` environment variable (default `10000`), and pushes to
-`main` automatically trigger new deployments.

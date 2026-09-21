@@ -240,7 +240,7 @@ class Database {
 
         $ssl_ca = isset($database_config['ssl_ca']) && !empty($database_config['ssl_ca'])
             ? $database_config['ssl_ca']
-            : '';
+            : null;
 
         $path = isset($database_config['path']) && !empty($database_config['path'])
             ? $database_config['path']
@@ -272,30 +272,17 @@ class Database {
             PDO::ATTR_EMULATE_PREPARES   => false,
         );
 
-        try {
-            if ($driver === 'mysql' && $ssl_ca !== '') {
-                if (!defined('PDO::MYSQL_ATTR_SSL_CA')) {
-                    throw new PDOException('PDO MySQL SSL support is not available.');
-                }
-
-                $is_absolute_path = preg_match('/^(?:[A-Za-z]:[\\\\\/]|[\\\\\/]{2}|\/)/', $ssl_ca) === 1;
-                if (!$is_absolute_path) {
-                    $ssl_ca = ROOT_DIR . ltrim(
-                        str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $ssl_ca),
-                        DIRECTORY_SEPARATOR
-                    );
-                }
-
-                if (!is_file($ssl_ca)) {
-                    throw new PDOException('The configured MySQL CA certificate was not found.');
-                }
-
-                $options[constant('PDO::MYSQL_ATTR_SSL_CA')] = $ssl_ca;
-                if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
-                    $options[constant('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')] = true;
-                }
+        if ($driver === 'mysql' && $ssl_ca) {
+            if (class_exists('Pdo\\Mysql') && defined('Pdo\\Mysql::ATTR_SSL_CA')) {
+                $options[\Pdo\Mysql::ATTR_SSL_CA] = $ssl_ca;
+                $options[\Pdo\Mysql::ATTR_SSL_VERIFY_SERVER_CERT] = true;
+            } elseif (defined('PDO::MYSQL_ATTR_SSL_CA')) {
+                $options[PDO::MYSQL_ATTR_SSL_CA] = $ssl_ca;
+                $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true;
             }
+        }
 
+        try {
             $this->db = new PDO($dsn, $username, $password, $options);
             $this->driver = $this->db->getAttribute(PDO::ATTR_DRIVER_NAME);
         } catch (Exception $e) {

@@ -25,41 +25,51 @@ class Create_users_table {
                     'auto_increment' => TRUE,
                     'null'           => FALSE,
                 ],
-                'firstname' => [
-                    'type'       => 'VARCHAR',
-                    'constraint' => 100,
-                    'null'       => FALSE,
-                ],
-                'lastname' => [
+                'username' => [
                     'type'       => 'VARCHAR',
                     'constraint' => 100,
                     'null'       => FALSE,
                 ],
                 'email' => [
                     'type'       => 'VARCHAR',
-                    'constraint' => 150,
+                    'constraint' => 255,
                     'null'       => FALSE,
                     'unique'     => TRUE,
                 ],
-                'username' => [
+                'password' => [
                     'type'       => 'VARCHAR',
-                    'constraint' => 100,
+                    'constraint' => 255,
                     'null'       => FALSE,
-                    'unique'     => TRUE,
+                ],
+                'role' => [
+                    'type'       => 'ENUM',
+                    'constraint' => "'admin','moderator','user'",
+                    'null'       => FALSE,
+                    'default'    => 'user',
+                ],
+                'is_active' => [
+                    'type'       => 'TINYINT',
+                    'constraint' => 1,
+                    'unsigned'   => TRUE,
+                    'null'       => FALSE,
+                    'default'    => 1,
+                ],
+                'created_at' => [
+                    'type'    => 'DATETIME',
+                    'null'    => FALSE,
+                    'default' => 'CURRENT_TIMESTAMP',
+                ],
+                'updated_at' => [
+                    'type'    => 'DATETIME',
+                    'null'    => TRUE,
+                    'default' => NULL,
                 ],
             ])
             ->add_key('id', primary: TRUE)
             ->add_key('username', unique: TRUE, name: 'username_unique')
-            ->add_key('email', unique: TRUE, name: 'email_unique')
+            ->add_key('email', name: 'email_idx')
+            ->add_key('role', name: 'role_idx')
             ->create_table('users');
-
-        $this->_lava->db->table('users')->bulk_insert([
-            ['firstname' => 'Juan',  'lastname' => 'Dela Cruz', 'email' => 'juan@example.com',  'username' => 'juandelacruz'],
-            ['firstname' => 'Maria', 'lastname' => 'Santos',    'email' => 'maria@example.com', 'username' => 'mariasantos'],
-            ['firstname' => 'Pedro', 'lastname' => 'Garcia',    'email' => 'pedro@example.com', 'username' => 'pedrogarcia'],
-            ['firstname' => 'Ana',   'lastname' => 'Reyes',     'email' => 'ana@example.com',   'username' => 'anareyes'],
-            ['firstname' => 'Jose',  'lastname' => 'Mendoza',   'email' => 'jose@example.com',  'username' => 'josemendoza'],
-        ]);
     }
 
     public function down()
