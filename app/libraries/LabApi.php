@@ -7,7 +7,7 @@ class LabApi extends Api
 {
     public function __construct()
     {
-        if (strlen(getenv('JWT_SECRET') ?: getenv('APP_KEY') ?: '') < 32) {
+        if (strlen(getenv('JWT_SECRET') ?: '') < 32 || strlen(getenv('REFRESH_TOKEN_KEY') ?: '') < 32) {
             http_response_code(503);
             header('Content-Type: application/json');
             echo json_encode(['error' => 'API authentication is not configured.']);
@@ -69,7 +69,7 @@ class LabApi extends Api
 
     public function refresh_user(string $token): array
     {
-        $claims = $this->validate_jwt($token);
+        $claims = $this->validate_jwt($token, 'refresh');
         if (!$claims || ($claims['type'] ?? '') !== 'refresh') {
             $this->respond_error('Invalid or expired refresh token.', 401);
         }

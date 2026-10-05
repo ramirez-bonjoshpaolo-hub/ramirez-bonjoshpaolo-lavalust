@@ -6,6 +6,7 @@ The existing Aiven database and .env are never modified.
 import argparse
 import json
 import os
+import secrets
 from pathlib import Path
 import shutil
 import socket
@@ -31,7 +32,7 @@ def main():
         conn = sqlite3.connect(database)
         conn.executescript('''
           CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, email TEXT,
-                              password TEXT, is_active INTEGER DEFAULT 1);
+                              password TEXT, is_active INTEGER DEFAULT 1, role TEXT DEFAULT 'admin');
           CREATE TABLE refresh_tokens (id INTEGER PRIMARY KEY AUTOINCREMENT,
                        user_id INTEGER, token TEXT, expires_at TEXT, jti TEXT);
           CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -40,11 +41,12 @@ def main():
         ''')
         hashed = subprocess.check_output([args.php, '-r',
             'echo password_hash("Lab6-fixture-only!", PASSWORD_DEFAULT);'], text=True)
-        conn.execute('INSERT INTO users VALUES (?, ?, ?, ?, ?)',
+        conn.execute('INSERT INTO users (id, username, email, password, is_active) VALUES (?, ?, ?, ?, ?)',
                      (1, 'fixture_admin', 'fixture@example.test', hashed, 1))
         conn.commit()
         env = os.environ.copy()
-        env.update(APP_KEY='fixture-only-' + 'a' * 48, DB_DRIVER='sqlite',
+        env.update(APP_KEY='fixture-only-' + 'a' * 48, JWT_SECRET=secrets.token_hex(32),
+                   REFRESH_TOKEN_KEY=secrets.token_hex(32), DB_DRIVER='sqlite',
                    DB_SQLITE_PATH=str(database), APP_ENV='testing', FRONTEND_URL='http://localhost:5173')
         with socket.socket() as sock:
             sock.bind(('127.0.0.1', 0))

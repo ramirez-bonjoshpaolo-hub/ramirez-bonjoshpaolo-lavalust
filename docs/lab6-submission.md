@@ -57,7 +57,12 @@ Existing product records are preserved. The Render startup script runs only pend
 
 Backend: `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, `DB_DATABASE`, `DB_SSL_CA`,
 `APP_KEY` (at least 32 random characters), `AUTH_USERNAME`, `AUTH_PASSWORD`, and `FRONTEND_URL`.
-Optional separate `JWT_SECRET` and `JWT_REFRESH_KEY` can be set. Otherwise independent keys are derived from APP_KEY.
+Required API keys: `JWT_SECRET` and `REFRESH_TOKEN_KEY`, each at least 32 random characters and different.
+Run `php lava jwt:generate` locally to generate and save independent 64-character keys in the ignored `.env` file.
+Set the same two values privately on the Render backend; never put them in the React environment or GitHub.
+The command preserves existing values unless `--force` is supplied; avoid `--show` in shared terminals.
+Replacing either key signs out existing API sessions. The updated framework verifies access/refresh token types
+and reads user roles from the database. LabApi also checks active users and revocable session records.
 `FRONTEND_URL` accepts comma-separated trusted frontend origins.
 Frontend: public `VITE_API_URL` points to the backend `/api` URL. It must never contain database credentials.
 
@@ -65,6 +70,8 @@ Frontend: public `VITE_API_URL` points to the backend `/api` URL. It must never 
 
 ```sh
 php tests/lab6_product_validation_test.php
+php tests/lab6_api_secrets_test.php
+python tests/lab6_jwt_cli_test.py --php /path/to/php
 python tests/lab6_api_integration.py --php /path/to/php
 cd frontend
 npm ci
@@ -74,6 +81,10 @@ npm run build
 The integration test uses an isolated SQLite fixture and sends actual HTTP requests to PHP.
 It checks protected GET/POST/PUT/PATCH/DELETE, login, validation, CORS preflight, refresh rotation,
 and immediate session revocation after logout. It never changes the live Aiven database.
+The JWT CLI test uses a disposable .env. The API security test checks missing, weak, or identical secrets,
+access/refresh token separation, expiry, and database-derived roles.
+An autoloaded `app/helpers/api_helper.php` supplies the global CORS helper required by the uploaded API
+library in this older framework checkout, preserving the restricted React origin and OPTIONS responses.
 
 ## Submission checklist
 

@@ -36,12 +36,11 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
-| Enable/Disable Migrations
+| Enable/Disable API Helper
 |--------------------------------------------------------------------------
 |
-| Migrations are disabled by default for security reasons.
-| You should enable migrations whenever you intend to do a schema migration
-| and disable it back when you're done.
+| Enabled for the Lab 6 API. Generate the required private signing keys
+| with php lava jwt:generate before using the API.
 |
 */
 $config['api_helper_enabled'] = TRUE;
@@ -75,7 +74,7 @@ $config['refresh_token_expiration'] = 604800;
 | Used for Securing endpoint
 |
 */
-$config['jwt_secret'] = getenv('JWT_SECRET') ?: hash_hmac('sha256', 'lab6-access', getenv('APP_KEY') ?: '');
+$config['jwt_secret'] = getenv('JWT_SECRET') ?: '';
 
 /*
 |--------------------------------------------------------------------------
@@ -85,7 +84,16 @@ $config['jwt_secret'] = getenv('JWT_SECRET') ?: hash_hmac('sha256', 'lab6-access
 | Used for Securing endpoint
 |
 */
-$config['refresh_token_key'] = getenv('JWT_REFRESH_KEY') ?: hash_hmac('sha256', 'lab6-refresh', getenv('APP_KEY') ?: getenv('JWT_SECRET') ?: '');
+$config['refresh_token_key'] = getenv('REFRESH_TOKEN_KEY') ?: '';
+
+/*
+|--------------------------------------------------------------------------
+| Verify User On Each Request
+|--------------------------------------------------------------------------
+| Read the user's role from the database rather than trusting token claims.
+*/
+$config['jwt_verify_user'] = TRUE;
+$config['users_table'] = 'users';
 
 /*
 |--------------------------------------------------------------------------

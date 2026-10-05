@@ -20,6 +20,8 @@ The React frontend is maintained in `frontend/` and the separate `ramirez-bonjos
 See [Lab 6 setup and submission](docs/lab6-submission.md) for endpoints, migrations, environment settings, and tests.
 Run `php lava migration run` to create/upgrade the tables without removing existing records.
 Render also runs pending migrations during startup. Set `FRONTEND_URL` to the React site's origin.
+Run `php lava jwt:generate` to populate the private `JWT_SECRET` and `REFRESH_TOKEN_KEY` values
+in `.env`, then configure those same values on the Render backend. Never add them to React or GitHub.
 
 ## Before running Labs 1–5
 

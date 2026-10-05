@@ -9,7 +9,7 @@ class Migration
         '[name]' => 'Migration name for create-migration',
         '[--confirm]' => 'Required for destructive rollback or refresh operations',
     ];
-    public function handle($action = null, array $flags = [])
+    public function handle($action = null, array $flags = [], $name = null)
     {
         $map = ['run' => 'migrate', 'create-migration' => 'create-migration', 'rollback' => 'rollback',
             'rollback-all' => 'rollback-all', 'refresh' => 'refresh', 'status' => 'status'];
@@ -20,8 +20,7 @@ class Migration
         }
         $route = $map[$action];
         if ($action === 'create-migration') {
-            // The framework passes only the first positional argument to handle().
-            $name = $GLOBALS['positional'][1] ?? null;
+            $name = $name ?? ($GLOBALS['positional'][1] ?? null);
             if (!$name || !preg_match('/^[a-z][a-z0-9_]*$/D', $name)) {
                 fwrite(STDERR, "Example: php lava migration create-migration create_products_table\n"); exit(1);
             }
