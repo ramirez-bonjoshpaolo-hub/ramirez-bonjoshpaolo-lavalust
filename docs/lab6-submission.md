@@ -86,10 +86,16 @@ and immediate session revocation after logout. It never changes the live Aiven d
 
 ## Current deployment status
 
-The React static site is deployed. The backend build succeeds, but startup migrations cannot connect to Aiven.
-The supplied hostname `lavalust-mysql-ramirezbonjoshpaolo00-a984.i.aivencloud.com` returns DNS name does not exist,
-including from a public DNS resolver. Restore the service or supply its current connection information before
-the live CRUD demonstration and Aiven screenshot can be completed.
-Local screenshots in `output/lab6-local-screenshots` use isolated test fixtures, not the live Aiven records.
+Both the React frontend and LavaLust backend are live on Render. The Aiven MySQL service is running;
+all six migrations (000 through 005) are applied. The earlier DNS failure was resolved after powering on Aiven.
+
+Live verification passed on 2026-10-04: React login, product listing, add, edit, delete confirmation, and logout;
+authenticated GET/POST/PUT/PATCH/DELETE, CORS preflight, input validation, refresh rotation, and logout revocation.
+A uniquely named temporary test product was created, edited, and deleted. All seven pre-existing products
+were verified unchanged. Test login sessions were revoked afterward.
+
+Live screenshots are saved locally in `output/lab6-live-screenshots` and `output/lab6-live-screenshots.zip`.
+They show actual Render pages connected to Aiven. The Aiven Console table screenshot must be captured separately.
+Screenshots in `output/lab6-local-screenshots` are isolated test fixtures, not live Aiven records.
 
 Reference: https://lavalust.netlify.app/docs/libraries/api.html
