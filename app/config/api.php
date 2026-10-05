@@ -85,7 +85,7 @@ $config['jwt_secret'] = getenv('JWT_SECRET') ?: hash_hmac('sha256', 'lab6-access
 | Used for Securing endpoint
 |
 */
-$config['refresh_token_key'] = getenv('JWT_REFRESH_KEY') ?: hash_hmac('sha256', 'lab6-refresh', getenv('APP_KEY') ?: '');
+$config['refresh_token_key'] = getenv('JWT_REFRESH_KEY') ?: hash_hmac('sha256', 'lab6-refresh', getenv('APP_KEY') ?: getenv('JWT_SECRET') ?: '');
 
 /*
 |--------------------------------------------------------------------------

@@ -80,8 +80,16 @@ and immediate session revocation after logout. It never changes the live Aiven d
 - Backend GitHub: https://github.com/ramirez-bonjoshpaolo-hub/ramirez-bonjoshpaolo-lavalust
 - React GitHub: https://github.com/ramirez-bonjoshpaolo-hub/ramirez-bonjoshpaolo-lavalust-react
 - Backend API: https://ramirez-bonjoshpaolo-lavalust-od8y.onrender.com/api
-- Frontend URL: record the confirmed Render static site URL after deployment.
+- Frontend URL: https://ramirez-bonjoshpaolo-lavalust-react.onrender.com
 - Screenshots: login, product list, add, edit, delete confirmation, Aiven tables.
 - Demonstration: login → list → add → edit → delete → logout → protected route rejected.
+
+## Current deployment status
+
+The React static site is deployed. The backend build succeeds, but startup migrations cannot connect to Aiven.
+The supplied hostname `lavalust-mysql-ramirezbonjoshpaolo00-a984.i.aivencloud.com` returns DNS name does not exist,
+including from a public DNS resolver. Restore the service or supply its current connection information before
+the live CRUD demonstration and Aiven screenshot can be completed.
+Local screenshots in `output/lab6-local-screenshots` use isolated test fixtures, not the live Aiven records.
 
 Reference: https://lavalust.netlify.app/docs/libraries/api.html
