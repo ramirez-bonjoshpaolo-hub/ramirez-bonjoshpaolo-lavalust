@@ -13,7 +13,15 @@ Personalized LavaLust laboratory project for **Bon Josh Paolo Ramirez**. The fra
 | `/login` | Session authentication |
 | `/products` | Authenticated product CRUD |
 
-## Before running
+## Laboratory Exercise 06
+
+The new authenticated JSON API serves `/api/login`, `/api/products`, `/api/refresh`, and `/api/logout`.
+The React frontend is maintained in `frontend/` and the separate `ramirez-bonjoshpaolo-lavalust-react` repository.
+See [Lab 6 setup and submission](docs/lab6-submission.md) for endpoints, migrations, environment settings, and tests.
+Run `php lava migration run` to create/upgrade the tables without removing existing records.
+Render also runs pending migrations during startup. Set `FRONTEND_URL` to the React site's origin.
+
+## Before running Labs 1–5
 
 1. Copy `.env.example` to `.env`.
 2. Add the real student ID, section, and school email to `.env`.

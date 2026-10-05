@@ -1,4 +1,14 @@
 <?php
+if (PHP_SAPI === 'cli') {
+    fwrite(STDERR, "Database connection or query failed. Verify database settings.\n");
+    exit(1);
+}
+if (preg_match('#^/(?:index\.php/)?api(?:/|$)#', parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH))) {
+    http_response_code(503);
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode(['error' => 'The database is temporarily unavailable. Please try again later.']);
+    exit;
+}
 defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 /**
  * ------------------------------------------------------------------

@@ -73,7 +73,7 @@ $database['main'] = array(
     'charset'	=> getenv('DB_CHARSET') ?: 'utf8mb4',
     'dbprefix'	=> '',
     // Optional for SQLite
-    'path'      => ''
+    'path'      => getenv('DB_SQLITE_PATH') ?: ''
 );
 
 ?>

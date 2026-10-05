@@ -47,6 +47,28 @@ defined('PREVENT_DIRECT_ACCESS') OR exit('No direct script access allowed');
 lava_instance()->config->load('middleware');
 
 $router->get('/', 'Welcome::index');
+// Laboratory Exercise 06: authenticated JSON API.
+$router->get('/api/health', 'ApiAuthController::health');
+$router->post('/api/login', 'ApiAuthController::login');
+$router->post('/api/refresh', 'ApiAuthController::refresh');
+$router->post('/api/logout', 'ApiAuthController::logout');
+$router->get('/api/me', 'ApiAuthController::me')->middleware('api_auth');
+$router->get('/api/products', 'ProductApiController::index')->middleware('api_auth');
+$router->post('/api/products', 'ProductApiController::create')->middleware('api_auth');
+$router->get('/api/products/{id}', 'ProductApiController::show')->where_number('id')->middleware('api_auth');
+$router->put('/api/products/{id}', 'ProductApiController::update')->where_number('id')->middleware('api_auth');
+$router->patch('/api/products/{id}', 'ProductApiController::update')->where_number('id')->middleware('api_auth');
+$router->delete('/api/products/{id}', 'ProductApiController::delete')->where_number('id')->middleware('api_auth');
+$router->options('/api/{path}', 'ApiAuthController::preflight');
+$router->options('/api/products/{id}', 'ApiAuthController::preflight');
+
+// MigrationController rejects HTTP access; these routes run through the CLI.
+$router->get('/create-migration/{migration_class}', 'MigrationController::create_migration');
+$router->get('/migrate', 'MigrationController::migrate');
+$router->get('/rollback', 'MigrationController::rollback');
+$router->get('/rollback-all', 'MigrationController::rollback_all');
+$router->get('/refresh', 'MigrationController::refresh');
+$router->get('/status', 'MigrationController::status');
 $router->get('/student', 'StudentController::index');
 $router->get('/student/profile', 'StudentController::profile')
        ->middleware('student_access');
